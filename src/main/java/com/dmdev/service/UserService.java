@@ -34,14 +34,14 @@ public class UserService {
     }
 
     @SneakyThrows
-    public Integer create(CreateUserDto userDto) {
-        var validationResult = createUserValidator.isValid(userDto);
+    public UserDto create(CreateUserDto userDto) {
+        var validationResult = createUserValidator.validate(userDto);
         if (!validationResult.isValid()) {
             throw new ValidationException(validationResult.getErrors());
         }
         var userEntity = createUserMapper.map(userDto);
         userDao.save(userEntity);
 
-        return userEntity.getId();
+        return userMapper.map(userEntity);
     }
 }

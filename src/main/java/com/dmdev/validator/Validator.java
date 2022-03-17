@@ -2,5 +2,5 @@ package com.dmdev.validator;
 
 public interface Validator<T> {
 
-    ValidationResult isValid(T object);
+    ValidationResult validate(T object);
 }
