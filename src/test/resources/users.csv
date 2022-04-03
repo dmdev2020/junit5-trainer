@@ -1,0 +1,6 @@
+id,name,birthday,email,password,role,gender
+1,Ivan,1990-01-10,ivan@gmail.com,111,ADMIN,MALE
+2,Petr,1995-10-19,petr@gmail.com,123,USER,MALE
+3,Sveta,2001-12-23,sveta@gmail.com,321,USER,FEMALE
+4,Vlad,1984-03-14,vlad@gmail.com,456,USER,MALE
+5,Kate,1989-08-09,kate@gmail.com,777,ADMIN,FEMALE
