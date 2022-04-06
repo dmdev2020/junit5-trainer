@@ -42,6 +42,23 @@
             <version>2.1.210</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.22.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>4.3.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>5.8.2</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -102,6 +119,14 @@
                         <phase>verify</phase>
                     </execution>
                 </executions>
+             <configuration>
+                 <excludes>
+                     <exclude>com.dmdev.dto/*</exclude>
+                     <exclude>com.dmdev.entity/*</exclude>
+                     <exclude>com.dmdev.util/*</exclude>
+                     <exclude>ccom.dmdev.validator.Error</exclude>
+                 </excludes>
+             </configuration>
             </plugin>
         </plugins>
     </build>
