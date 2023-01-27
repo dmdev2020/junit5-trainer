@@ -14,7 +14,6 @@ public class UserDto {
     String name;
     LocalDate birthday;
     String email;
-    String image;
     Role role;
     Gender gender;
 }

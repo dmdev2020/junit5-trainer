@@ -23,10 +23,10 @@ public class CreateUserValidator implements Validator<CreateUserDto> {
         if (!LocalDateFormatter.isValid(object.getBirthday())) {
             validationResult.add(Error.of("invalid.birthday", "Birthday is invalid"));
         }
-        if (Gender.find(object.getGender()).isEmpty()) {
+        if (Gender.findOpt(object.getGender()).isEmpty()) {
             validationResult.add(Error.of("invalid.gender", "Gender is invalid"));
         }
-        if (Role.find(object.getRole()).isEmpty()) {
+        if (Role.findOpt(object.getRole()).isEmpty()) {
             validationResult.add(Error.of("invalid.role", "Role is invalid"));
         }
         return validationResult;

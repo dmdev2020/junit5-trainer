@@ -144,17 +144,17 @@ public class UserDao implements Dao<Integer, User> {
                 .birthday(resultSet.getObject("birthday", Date.class).toLocalDate())
                 .email(resultSet.getObject("email", String.class))
                 .password(resultSet.getObject("password", String.class))
-                .role(Role.find(resultSet.getObject("role", String.class)).orElse(null))
-                .gender(Gender.find(resultSet.getObject("gender", String.class)).orElse(null))
+                .role(Role.valueOf(resultSet.getObject("role", String.class)))
+                .gender(Gender.valueOf(resultSet.getObject("gender", String.class)))
                 .build();
     }
 
     private void prepareStatementToUpsert(PreparedStatement preparedStatement, User entity) throws SQLException {
         preparedStatement.setObject(1, entity.getName());
-        preparedStatement.setObject(2, entity.getBirthday());
+        preparedStatement.setObject(2, Date.valueOf(entity.getBirthday()));
         preparedStatement.setObject(3, entity.getEmail());
         preparedStatement.setObject(4, entity.getPassword());
-        preparedStatement.setObject(5, entity.getRole() != null ? entity.getRole().name() : null);
-        preparedStatement.setObject(6, entity.getGender() != null ? entity.getGender().name() : null);
+        preparedStatement.setObject(5, entity.getRole().name());
+        preparedStatement.setObject(6, entity.getGender().name());
     }
 }

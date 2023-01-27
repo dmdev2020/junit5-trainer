@@ -25,8 +25,8 @@ public class CreateUserMapper implements Mapper<CreateUserDto, User> {
                 .birthday(LocalDateFormatter.format(object.getBirthday()))
                 .email(object.getEmail())
                 .password(object.getPassword())
-                .gender(Gender.find(object.getGender()).orElse(null))
-                .role(Role.find(object.getRole()).orElse(null))
+                .gender(Gender.findOpt(object.getGender()).orElse(null))
+                .role(Role.findOpt(object.getRole()).orElse(null))
                 .build();
     }
 }

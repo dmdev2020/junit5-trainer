@@ -7,7 +7,11 @@ public enum Role {
     USER,
     ADMIN;
 
-    public static Optional<Role> find(String role) {
+    public static Role find(String role) {
+        return findOpt(role).orElseThrow();
+    }
+
+    public static Optional<Role> findOpt(String role) {
         return Arrays.stream(values())
                 .filter(it -> it.name().equals(role))
                 .findFirst();

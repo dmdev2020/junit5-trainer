@@ -36,7 +36,7 @@ public class UserService {
     @SneakyThrows
     public UserDto create(CreateUserDto userDto) {
         var validationResult = createUserValidator.validate(userDto);
-        if (!validationResult.isValid()) {
+        if (validationResult.hasErrors()) {
             throw new ValidationException(validationResult.getErrors());
         }
         var userEntity = createUserMapper.map(userDto);
