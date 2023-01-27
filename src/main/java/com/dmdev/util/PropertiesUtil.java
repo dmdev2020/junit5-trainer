@@ -6,7 +6,7 @@ import lombok.experimental.UtilityClass;
 import java.util.Properties;
 
 @UtilityClass
-public final class PropertiesUtil {
+public class PropertiesUtil {
 
     private static final Properties properties = new Properties();
 
