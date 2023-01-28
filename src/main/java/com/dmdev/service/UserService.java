@@ -7,26 +7,18 @@ import com.dmdev.exception.ValidationException;
 import com.dmdev.mapper.CreateUserMapper;
 import com.dmdev.mapper.UserMapper;
 import com.dmdev.validator.CreateUserValidator;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
 import java.util.Optional;
 
-import static lombok.AccessLevel.PRIVATE;
-
-@NoArgsConstructor(access = PRIVATE)
+@RequiredArgsConstructor
 public class UserService {
 
-    private static final UserService INSTANCE = new UserService();
-
-    private final CreateUserValidator createUserValidator = CreateUserValidator.getInstance();
-    private final UserDao userDao = UserDao.getInstance();
-    private final CreateUserMapper createUserMapper = CreateUserMapper.getInstance();
-    private final UserMapper userMapper = UserMapper.getInstance();
-
-    public static UserService getInstance() {
-        return INSTANCE;
-    }
+    private final CreateUserValidator createUserValidator;
+    private final UserDao userDao;
+    private final CreateUserMapper createUserMapper;
+    private final UserMapper userMapper;
 
     public Optional<UserDto> login(String email, String password) {
         return userDao.findByEmailAndPassword(email, password)
