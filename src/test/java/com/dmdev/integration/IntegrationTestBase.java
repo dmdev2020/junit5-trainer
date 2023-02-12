@@ -22,6 +22,13 @@ public abstract class IntegrationTestBase {
             );
             """;
 
+    private static final String INSERT_SQL = """
+            INSERT INTO subscription (user_id , name, provider, expiration_date, status)
+            VALUES ('1', 'Ivan', 'GOOGLE', '2025-01-12T18:58:54.411928400Z', 'ACTIVE'),
+                   ('2', 'Petr', 'APPLE', '2025-01-12T18:58:54.411928400Z', 'EXPIRED'),
+                   ('3', 'Andrey', 'APPLE', '2025-01-12T18:58:54.411928400Z', 'CANCELED');
+            """;
+
     @BeforeAll
     static void prepareDatabase() throws SQLException {
         try (var connection = ConnectionManager.get();
@@ -35,6 +42,7 @@ public abstract class IntegrationTestBase {
         try (var connection = ConnectionManager.get();
              var statement = connection.createStatement()) {
             statement.execute(CLEAN_SQL);
+            statement.execute(INSERT_SQL);
         }
     }
 }
