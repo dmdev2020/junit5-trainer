@@ -22,7 +22,7 @@ public class CreateUserMapper implements Mapper<CreateUserDto, User> {
     public User map(CreateUserDto object) {
         return User.builder()
                 .name(object.getName())
-                .birthday(LocalDateFormatter.format(object.getBirthday()))
+                .birthday(LocalDateFormatter.parse(object.getBirthday()))
                 .email(object.getEmail())
                 .password(object.getPassword())
                 .gender(Gender.find(object.getGender()).orElse(null))
