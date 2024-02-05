@@ -92,6 +92,6 @@ class CreateUserValidatorTest {
         ValidationResult actual = validator.validate(dto);
 
         assertThat(actual.isValid()).isFalse();
-        assertThat(actual.getErrors().stream().map(e -> e.getCode()).toList()).contains("invalid.birthday", "invalid.gender", "invalid.role");
+        assertThat(actual.getErrors().stream().map(e -> e.getCode()).toList()).contains(104, 105, 106);
     }
 }
