@@ -14,6 +14,10 @@ public class ValidationResult {
         this.errors.add(error);
     }
 
+    public boolean hasErrors() {
+        return !errors.isEmpty();
+    }
+
     public boolean isValid() {
         return errors.isEmpty();
     }

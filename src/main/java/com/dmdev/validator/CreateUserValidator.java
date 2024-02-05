@@ -21,13 +21,13 @@ public class CreateUserValidator implements Validator<CreateUserDto> {
     public ValidationResult validate(CreateUserDto object) {
         var validationResult = new ValidationResult();
         if (!LocalDateFormatter.isValid(object.getBirthday())) {
-            validationResult.add(Error.of("invalid.birthday", "Birthday is invalid"));
+            validationResult.add(Error.of(104, "Birthday is invalid"));
         }
         if (Gender.find(object.getGender()).isEmpty()) {
-            validationResult.add(Error.of("invalid.gender", "Gender is invalid"));
+            validationResult.add(Error.of(105, "Gender is invalid"));
         }
         if (Role.find(object.getRole()).isEmpty()) {
-            validationResult.add(Error.of("invalid.role", "Role is invalid"));
+            validationResult.add(Error.of(106, "Role is invalid"));
         }
         return validationResult;
     }
