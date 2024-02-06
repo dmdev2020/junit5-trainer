@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static com.dmdev.util.DateUtil.getExpirationDate;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -70,7 +71,23 @@ class SubscriptionServiceTest {
     }
 
     @Test
-    void cancel() {
+    void whenActiveSubscriptionExists_thenCancelIt() {
+        Subscription existingSub = Subscription.builder()
+                .id(243)
+                .userId(23)
+                .name("Test Name")
+                .provider(Provider.APPLE)
+                .expirationDate(getExpirationDate("23:59:59, 31.03.2024", "H:m:s, d.M.y"))
+                .status(Status.ACTIVE)
+                .build();
+
+        doReturn(Optional.of(existingSub)).when(subDao).findById(any());
+        // Ask stub DAO.update() method to return whichever argument it receives
+        when(subDao.update(any(Subscription.class))).then(AdditionalAnswers.returnsFirstArg());
+
+        subService.cancel(existingSub.getId());
+
+        assertThat(existingSub.getStatus()).isEqualTo(Status.CANCELED);
     }
 
     @Test
