@@ -15,6 +15,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -33,8 +36,11 @@ class SubscriptionServiceTest {
     private CreateSubscriptionMapper createSubMapper;
     @Mock
     private CreateSubscriptionValidator createSubValidator;
+    @Mock
+    private Clock clock = Clock.fixed(Instant.now(), ZoneId.systemDefault());
+
     @InjectMocks
-    private SubscriptionService subService;
+    private SubscriptionService subService; // );
 
     @Test
     void whenSubscriptionExists_thenUpdateAndInsert() {
@@ -91,6 +97,23 @@ class SubscriptionServiceTest {
     }
 
     @Test
-    void expire() {
+    void whenNonExpiredSubscriptionExists_thenExpireIt() {
+        Subscription existingSub = Subscription.builder()
+                .id(243)
+                .userId(23)
+                .name("Test Name")
+                .provider(Provider.APPLE)
+                .expirationDate(getExpirationDate("23:59:59, 31.03.2024", "H:m:s, d.M.y"))
+                .status(Status.ACTIVE)
+                .build();
+
+        doReturn(Optional.of(existingSub)).when(subDao).findById(any());
+        // Ask stub DAO.update() method to return whichever argument it receives
+        when(subDao.update(any(Subscription.class))).then(AdditionalAnswers.returnsFirstArg());
+
+        subService.expire(existingSub.getId());
+
+        assertThat(existingSub.getStatus()).isEqualTo(Status.EXPIRED);
+        assertThat(existingSub.getExpirationDate()).isEqualTo(Instant.now(clock));
     }
 }
