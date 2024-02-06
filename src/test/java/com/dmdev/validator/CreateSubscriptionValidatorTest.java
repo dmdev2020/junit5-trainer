@@ -10,6 +10,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -111,6 +112,22 @@ class CreateSubscriptionValidatorTest {
         assertThat(actualResult.getErrors().size()).isEqualTo(1);
         assertThat(actualResult.getErrors().get(0).getCode()).isEqualTo(103);
         assertThat(actualResult.getErrors().get(0).getMessage()).isEqualTo("expirationDate is invalid");
+    }
+
+    @Test
+    void whenAllCheckPointsFail_thenValidationFails() {
+        CreateSubscriptionDto invalidDto = CreateSubscriptionDto.builder()
+                .expirationDate(getExpirationDate("21:00:00, 30.04.2023", "H:m:s, d.M.y"))
+                .build();
+
+        ValidationResult actualResult = validator.validate(invalidDto);
+
+        assertThat(actualResult.hasErrors()).isTrue();
+        assertThat(actualResult.getErrors().size()).isEqualTo(4);
+        assertThat(actualResult.getErrors().stream().map(Error::getCode).collect(Collectors.toList()))
+                .containsExactly(100, 101, 102, 103);
+        assertThat(actualResult.getErrors().stream().map(Error::getMessage).collect(Collectors.toList()))
+                .containsExactly("userId is invalid", "name is invalid", "provider is invalid", "expirationDate is invalid");
     }
 
     private Instant getExpirationDate(String stringDate, String pattern) {
