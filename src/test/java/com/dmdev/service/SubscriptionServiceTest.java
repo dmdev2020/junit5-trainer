@@ -24,8 +24,7 @@ import java.util.Optional;
 import static com.dmdev.util.DateUtil.getExpirationDate;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class SubscriptionServiceTest {
@@ -73,6 +72,7 @@ class SubscriptionServiceTest {
         when(subDao.upsert(any(Subscription.class))).then(AdditionalAnswers.returnsFirstArg());
 
         assertThat(subService.upsert(dto)).isEqualTo(updatedSub);
+        verify(subDao).upsert(existingSub);
 
     }
 
@@ -94,6 +94,7 @@ class SubscriptionServiceTest {
         subService.cancel(existingSub.getId());
 
         assertThat(existingSub.getStatus()).isEqualTo(Status.CANCELED);
+        verify(subDao).update(existingSub);
     }
 
     @Test
@@ -115,5 +116,6 @@ class SubscriptionServiceTest {
 
         assertThat(existingSub.getStatus()).isEqualTo(Status.EXPIRED);
         assertThat(existingSub.getExpirationDate()).isEqualTo(Instant.now(clock));
+        verify(subDao).update(existingSub);
     }
 }
