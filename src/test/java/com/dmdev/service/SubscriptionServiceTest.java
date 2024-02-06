@@ -5,8 +5,11 @@ import com.dmdev.dto.CreateSubscriptionDto;
 import com.dmdev.entity.Provider;
 import com.dmdev.entity.Status;
 import com.dmdev.entity.Subscription;
+import com.dmdev.exception.SubscriptionException;
+import com.dmdev.exception.ValidationException;
 import com.dmdev.mapper.CreateSubscriptionMapper;
 import com.dmdev.validator.CreateSubscriptionValidator;
+import com.dmdev.validator.Error;
 import com.dmdev.validator.ValidationResult;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +26,7 @@ import java.util.Optional;
 
 import static com.dmdev.util.DateUtil.getExpirationDate;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -77,6 +81,17 @@ class SubscriptionServiceTest {
     }
 
     @Test
+    void whenInvalidDto_thenExceptionThrown() {
+        CreateSubscriptionDto invalidDto = CreateSubscriptionDto.builder().build();
+        ValidationResult invalidResult = new ValidationResult();
+        invalidResult.add(Error.of(100, "userId is invalid"));
+        doReturn(invalidResult).when(createSubValidator).validate(invalidDto);
+
+        assertThrows(ValidationException.class, () -> subService.upsert(invalidDto));
+        verifyNoInteractions(subDao, createSubMapper);
+    }
+
+    @Test
     void whenActiveSubscriptionExists_thenCancelIt() {
         Subscription existingSub = Subscription.builder()
                 .id(243)
@@ -95,6 +110,19 @@ class SubscriptionServiceTest {
 
         assertThat(existingSub.getStatus()).isEqualTo(Status.CANCELED);
         verify(subDao).update(existingSub);
+    }
+
+    @Test
+    void whenSubIdNotExists_thenExceptionThrown() {
+        doReturn(Optional.empty()).when(subDao).findById(anyInt());
+        assertThrows(IllegalArgumentException.class, () -> subService.cancel(anyInt()));
+    }
+
+    @Test
+    void whenSubIsActive_thenExceptionThrown() {
+        doReturn(Optional.of(Subscription.builder().status(Status.EXPIRED).build()))
+                .when(subDao).findById(anyInt());
+        assertThrows(SubscriptionException.class, () -> subService.cancel(anyInt()));
     }
 
     @Test
